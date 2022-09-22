@@ -6,7 +6,7 @@ find them useful.
 
 You can find the following extensions in the repository:
 
-* [`build-gradle`](./build-gradle/README.md) - Parse build.gradle files for submission to Phylum
+* [`build-gradle`](./build-gradle/README.md) - Parse `build.gradle` files for submission to Phylum
 
 # Contributions welcome
 If you have written an extension that you think others would find useful,
