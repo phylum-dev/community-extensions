@@ -69,7 +69,7 @@ function parseGradleFile(data: string) {
         return "";
     })
     .filter(line => line.length > 0) //ignore empty lines (failed the regex for some reason);
-    return [...new Set(dependencies)].map((x) => parsePackagTuple(x));
+    return [...new Set(dependencies)].map((x) => parsePackageTuple(x));
 }
 
 function parseOutTestRuntimeClasspathSection(gradleDependencies: string) {    
