@@ -12,7 +12,7 @@ function logWarning(msg: string) { console.warn(`${yellow("[-]")} ${msg}`); }
  *  string is `<name>:<version>`. Anything after the last `:` is treated as
  *  the version.
  */
-function parsePackagTuple(s: string) {
+function parsePackageTuple(s: string) {
     let parts = s.split(":");
 
     if(parts.length < 2) {
