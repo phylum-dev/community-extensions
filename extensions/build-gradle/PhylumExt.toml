@@ -1,4 +1,4 @@
-name = "build-gradle"
+name = "build-gradle-lock"
 description = "Parse build.gradle files for submission to Phylum"
 entry_point = "main.ts"
 

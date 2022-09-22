@@ -295,8 +295,8 @@ async function getSubprojectDependencies(rootProject?: string) {
 
 // Parse CLI args.
 const args = parse(Deno.args);
-const group = args["group"];
-const project = args["project"];
+let group = args["group"];
+let project = args["project"];
 
 // If no project name is specified, take the root directory name.
 if(!project) {
