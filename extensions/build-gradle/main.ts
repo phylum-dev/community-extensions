@@ -81,15 +81,15 @@ function parseOutTestRuntimeClasspathSection(gradleDependencies: string) {
         return [];
     }
 
-    const beginingOfTestRuntimeClasspath = lines.slice(sectionStart, lines.length)
+    const beginningOfTestRuntimeClasspath = lines.slice(sectionStart, lines.length)
 
     //Find the end of the section
-    const sectionEnd = beginingOfTestRuntimeClasspath.findIndex(x => x.length == 0);
+    const sectionEnd = beginningOfTestRuntimeClasspath.findIndex(x => x.length == 0);
     if (sectionEnd < 0) {
         return [];
     }
     
-    return beginingOfTestRuntimeClasspath.slice(0, sectionEnd + 1);
+    return beginningOfTestRuntimeClasspath.slice(0, sectionEnd + 1);
 }
 
 /**
