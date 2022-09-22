@@ -1,7 +1,7 @@
 import { PhylumApi } from "phylum";
 import { red, green, yellow, blue } from 'https://deno.land/std@0.150.0/fmt/colors.ts';
 import * as path from "https://deno.land/std@0.57.0/path/mod.ts";
-
+import { parse } from "https://deno.land/std@0.156.0/flags/mod.ts";
 
 function logSuccess(msg: string) { console.log(`${green("[*]")} ${msg}`); }
 function logError(msg: string) { console.error(`${red("[!]")} ${msg}`); }
@@ -293,28 +293,10 @@ async function getSubprojectDependencies(rootProject?: string) {
     return ret;
 }
 
-/**
- *  A cheap CLI argument parser for our extension.
- */
-function parseArg(arg: string, cliArgs: string[]) {
-    for(let i = 0; i < cliArgs.length; i++) {
-        if(cliArgs[i] === `--${arg}`) {
-            if(i+1 < cliArgs.length) {
-                return cliArgs[i+1];
-            }
-
-            break;
-        }
-    }
-
-    return null;
-}
-
 // Parse CLI args.
-const args = Deno.args;
-
-let group = parseArg("group", args);
-let project = parseArg("project", args);
+const args = parse(Deno.args);
+const group = args["group"];
+const project = args["project"];
 
 // If no project name is specified, take the root directory name.
 if(!project) {
