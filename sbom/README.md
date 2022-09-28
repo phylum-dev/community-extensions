@@ -1,4 +1,4 @@
-# `sbomb` Extension for Phylum
+# `sbom` Extension for Phylum
 This extension will take a provided lock file, submit it to Phylum for analysis and return the job data in structured SBOMB format.
 
 ## Installation and Basic Usage
