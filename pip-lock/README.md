@@ -5,6 +5,8 @@ and generates strict output.
 
 [phylum-cli]: https://github.com/phylum-dev/cli
 
+DISCLAIMER: This extension leverages the `pip install --dry-run` command. At this time, the `--dry-run` argument still downloads the pacakges
+and executes the `setup.py`, which may contain malicious code!
 
 ## Installation and basic usage
 
