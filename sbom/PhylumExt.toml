@@ -3,4 +3,4 @@ description = "NPM package manager hooks"
 entry_point = "main.ts"
 
 [permissions]
-read = ["package-lock.json", "requirements.txt", "poetry.lock", "gemfile.lock"]
+read = ["./"]
