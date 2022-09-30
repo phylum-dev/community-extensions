@@ -31,7 +31,7 @@ function getHomepage(pkg: Package) {
         case 'rubygems':
             return `https://rubygems.org/gems/${pkg.name}/versions/${pkg.version}`;
         case 'maven':
-            return ``; // TODO: How do we handle this? Maven central? What about others?
+            return `https://search.maven.org/artifact/${pkg.name}/${pkg.version}/pom`;
         case 'nuget':
             return `https://www.nuget.org/packages/${pkg.name}/${pkg.version}`;
         default:
