@@ -42,7 +42,7 @@ function getHomepage(pkg: Package) {
 /**
  *  Generates the document header for the produced SBOM.
  */
-async function generateDocumentHeader(docNamespace: string) {
+function generateDocumentHeader(docNamespace: string) {
     // TODO: need to capture
     //  * DocumentNamespace (Not sure???)
     //  * LicenseListVersion (Not sure???)
