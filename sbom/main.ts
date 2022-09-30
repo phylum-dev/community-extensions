@@ -125,7 +125,15 @@ if(!file) {
     var pkgs = pkgJson["packages"];
     var type = pkgJson["package_type"];
 
-    const jobId = await PhylumApi.analyze(type, pkgs, project, group);
-    const data = await PhylumApi.getJobStatus(jobId);
-    console.log(await toSBOM(data));
+    try {
+        const jobId = await PhylumApi.analyze(type, pkgs, project, group);
+        const data = await PhylumApi.getJobStatus(jobId);
+        console.log(await toSBOM(data));
+    } catch(e) {
+        if(e.toString().indexOf("Could not find project")) {
+            console.error("[!] You need to create a Phylum project first or specify `--project` flag.");
+        } else {
+            console.error(e);
+        }
+    }
 }
