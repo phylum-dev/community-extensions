@@ -13,8 +13,8 @@ and executes the `setup.py`, which may contain malicious code!
 Clone the repository and install the extension via the Phylum CLI.
 
 ```console
-git clone https://github.com/phylum-dev/cli
-phylum extension install cli/extensions/pip-lock
+git clone https://github.com/phylum-dev/community-extensions
+phylum extension install community-extensions/pip-lock
 ```
 
 Generate strict requirements output by pointing the extension at your `requirements.txt`:
