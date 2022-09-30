@@ -85,8 +85,8 @@ function createRelationship(pkg: string, ver: string, dep: Dependency) {
 }
 
 /**
- *  Given a Phylum job JSON, generates the SBOM document and drops
- *  it to disk.
+ *  Given a Phylum job JSON, generates the SBOM document and prints 
+ *  to stdout. 
  */
 async function toSBOM(data: string) {
     let projectName = data["project_name"];
