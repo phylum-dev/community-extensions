@@ -16,7 +16,7 @@ interface Package {
     version: string;
     license: string;
     type: string;
-    dependencies: Dependency[];
+    dependencies: { name: String, version: String }[];
 }
 
 /**
@@ -88,24 +88,21 @@ function createRelationship(pkg: string, ver: string, dep: Dependency) {
  *  Given a Phylum job JSON, generates the SBOM document and prints 
  *  to stdout. 
  */
-async function toSBOM(data: string) {
+function toSBOM(data: string) {
     let projectName = data["project_name"];
-    let sbom = await generateDocumentHeader(projectName);
+    let sbom = generateDocumentHeader(projectName);
     let refs = "";
 
     // Construct the packages section of our SBOM
     data["packages"].forEach((p) => {
-        let pkg: Package = p;
+        let pkg: Package = p as Package;
         sbom += createPackageBlock(pkg);
 
-        let pkgName: keyof typeof obj;
-
         // Create the package relationships of our SBOM
-        for (pkgName in pkg.dependencies) {
-            let version = pkg.dependencies[pkgName];
-            let dep = { name: pkgName, version: version };
+        for(var name in pkg.dependencies) {
+            let dep = { name: name, version: pkg.dependencies[name] }
             refs += createRelationship(pkg.name, pkg.version, dep);
-        }
+        };
     });
 
     return sbom + `##### Relationships\n\n${refs}`; 
