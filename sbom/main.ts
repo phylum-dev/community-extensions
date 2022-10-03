@@ -11,12 +11,16 @@ interface Dependency {
     version: string;
 }
 
+interface DependencyList {
+    [name: string]: string;
+}
+
 interface Package {
     name: string;
     version: string;
     license: string;
     type: string;
-    dependencies: { name: String, version: String }[];
+    dependencies: DependencyList;
 }
 
 /**
