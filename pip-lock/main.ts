@@ -368,7 +368,7 @@ function outputStrict(packageList: [object]) {
 
 const pipPath = await findPip();
 if(!pipPath) {
-    console.error("[phylum] Unable to find pip - please ensure it is available in the current environment, or provide.");
+    console.error("[phylum] Unable to find pip - please ensure it is available in the current environment, or provide");
     console.error("[phylum] via the `PHYLUM_PIP_PATH` environment variable.");
     Deno.exit(1);
 }
