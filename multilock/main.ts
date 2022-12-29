@@ -1,10 +1,10 @@
-// deno-lint-ignore-file
+// deno-lint-ignore-file no-explicit-any
 import { parse } from "https://deno.land/std@0.170.0/flags/mod.ts";
 
 import { ApiVersion, PhylumApi } from "phylum";
 
 const USAGE = `
-phylum multi-lock [OPTIONS] <LOCKFILE>...
+phylum multilock [OPTIONS] <LOCKFILE>...
 
 Arguments:
   <LOCKFILE>...  The package lockfile(s) to submit.

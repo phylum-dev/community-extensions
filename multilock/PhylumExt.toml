@@ -1,4 +1,4 @@
-name = "multi-lock"
+name = "multilock"
 
 [permissions]
 read = ["."]

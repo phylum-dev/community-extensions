@@ -1,4 +1,4 @@
-# Multi-lock
+# Multilock
 
 This extension allows a user to submit multiple lockfiles to a single phylum project.
 
@@ -7,7 +7,7 @@ This extension allows a user to submit multiple lockfiles to a single phylum pro
 To analyze multiple lockfiles in a single job:
 
 ```
-$ phylum multi-lock backend/go.sum frontend/package-lock.json
+$ phylum multilock backend/go.sum frontend/package-lock.json
 ```
 
 ## Details
