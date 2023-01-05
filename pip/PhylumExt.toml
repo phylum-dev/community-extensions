@@ -1,0 +1,10 @@
+name = "pip"
+description = "pip package manager hooks"
+entry_point = "main.ts"
+
+[permissions]
+run = ["/bin"]
+write = ["./", "~/.cache"]
+read = ["./", "~/.cache", "/etc/passwd"]
+net = true
+unsandboxed_run = ["pip"]
