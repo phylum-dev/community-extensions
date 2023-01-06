@@ -77,9 +77,9 @@ async function checkDryRun() {
     cmd: "pip",
     args: [...Deno.args, "--dry-run"],
     exceptions: {
-      run: ["/bin"],
-      write: ["./", "~/.cache"],
-      read: ["./", "~/.cache", "/etc/passwd"],
+      run: ["/bin", "/usr/bin", "~/.pyenv"],
+      write: ["~/Library/Caches/pip", "~/.cache", "~/.local/lib", "/tmp"],
+      read: ["~/Library/Caches/pip", "~/.cache", "~/.local/lib", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
       net: true,
     },
     stdout: 'piped',
