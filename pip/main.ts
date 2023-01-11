@@ -129,9 +129,9 @@ function parseDryRun(output: string): [object] {
   // Extract the "Would install [..]" line.
   let new_deps;
   const lines = output.split('\n');
-  for (var i = 0; i < lines.length; i++) {
-    if (lines[i].startsWith('Would install ')) {
-      new_deps = lines[i].substring('Would install '.length);
+  for (let line of lines) {
+    if (line.startsWith('Would install ')) {
+      new_deps = line.substring('Would install '.length);
       break;
     }
   }
