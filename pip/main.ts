@@ -65,9 +65,17 @@ if (Deno.args.length == 0 || subcommand != "install") {
 await checkDryRun();
 
 // Perform the package installation.
-const cmd = Deno.run({ cmd: ["pip", ...Deno.args] });
-const status = await cmd.status();
-Deno.exit(status.code);
+const installStatus = PhylumApi.runSandboxed({
+  cmd: "pip",
+  args: Deno.args,
+  exceptions: {
+    run: ["/bin", "/usr/bin", "~/.pyenv"],
+    write: ["./", "~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
+    read: ["./", "~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
+    net: true,
+  },
+});
+Deno.exit(installStatus.code);
 
 // Analyze new packages.
 async function checkDryRun() {
