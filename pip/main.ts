@@ -5,25 +5,6 @@ import {
 } from "https://deno.land/std@0.150.0/fmt/colors.ts";
 import { PhylumApi } from "phylum";
 
-// Find project root directory.
-async function findRoot(manifest: string): Promise<string | undefined> {
-  let workingDir = Deno.cwd();
-
-  // Traverse up to 32 directories to find the root directory.
-  for (let i = 0; i < 32; i++) {
-    try {
-      // Check if manifest exists at location.
-      await Deno.stat(workingDir + "/" + manifest);
-      return workingDir;
-    } catch (_e) {
-      // Pop to parent if manifest doesn't exist.
-      workingDir += "/..";
-    }
-  }
-
-  return undefined;
-}
-
 // List with all of pip's subcommands.
 const knownSubcommands = [
   "install",
