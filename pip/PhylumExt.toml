@@ -3,8 +3,8 @@ description = "pip package manager hooks"
 entry_point = "main.ts"
 
 [permissions]
-run = ["/bin", "/usr/bin", "~/.pyenv"]
+run = ["./", "/bin", "/usr/bin", "~/.pyenv"]
 write = ["./", "~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp"]
-read = ["./", "~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"]
+read = ["~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"]
 net = true
 unsandboxed_run = ["pip"]
