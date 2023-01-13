@@ -67,7 +67,7 @@ async function checkDryRun() {
     args: [...Deno.args, "--dry-run"],
     exceptions: {
       run: ["./", "/bin", "/usr/bin", "~/.pyenv"],
-      write: ["~/Library/Caches/pip", "~/.cache", "~/.local/lib", "/tmp"],
+      write: ["~/Library/Caches/pip", "~/.pyenv", "~/.cache", "~/.local/lib", "/tmp"],
       read: ["~/Library/Caches/pip", "~/.cache", "~/.local/lib", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
       net: true,
     },
