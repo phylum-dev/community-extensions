@@ -33,6 +33,7 @@ const knownSubcommands = [
 const subcommand = Deno.args[0];
 if (Deno.args.length != 0 && !knownSubcommands.includes(subcommand)) {
   console.error(`[${red("phylum")}] This extension does not support arguments before the first subcommand. Please open an issue if "${subcommand}" is not an argument.`);
+  Deno.exit(125);
 }
 
 // Ignore all commands that shouldn't be intercepted.
