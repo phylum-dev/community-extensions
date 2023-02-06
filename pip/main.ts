@@ -38,7 +38,7 @@ if (Deno.args.length != 0 && !knownSubcommands.includes(subcommand)) {
 
 // Ignore all commands that shouldn't be intercepted.
 if (Deno.args.length == 0 || subcommand != "install") {
-  const cmd = Deno.run({ cmd: ["pip", ...Deno.args] });
+  const cmd = Deno.run({ cmd: ["pip3", ...Deno.args] });
   const status = await cmd.status();
   Deno.exit(status.code);
 }
@@ -48,7 +48,7 @@ await checkDryRun();
 
 // Perform the package installation.
 const installStatus = PhylumApi.runSandboxed({
-  cmd: "pip",
+  cmd: "pip3",
   args: Deno.args,
   exceptions: {
     run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
@@ -64,7 +64,7 @@ async function checkDryRun() {
   console.log(`[${green("phylum")}] Finding new dependencies…`);
 
   const status = PhylumApi.runSandboxed({
-    cmd: "pip",
+    cmd: "pip3",
     args: [...Deno.args, "--dry-run"],
     exceptions: {
       run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
