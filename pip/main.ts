@@ -51,7 +51,7 @@ const installStatus = PhylumApi.runSandboxed({
   cmd: "pip",
   args: Deno.args,
   exceptions: {
-    run: ["./", "/bin", "/usr/bin", "~/.pyenv"],
+    run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
     write: ["./", "~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
     read: ["~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
     net: true,
@@ -67,7 +67,7 @@ async function checkDryRun() {
     cmd: "pip",
     args: [...Deno.args, "--dry-run"],
     exceptions: {
-      run: ["./", "/bin", "/usr/bin", "~/.pyenv"],
+      run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
       write: ["~/Library/Caches/pip", "~/.pyenv", "~/.cache", "~/.local/lib", "/tmp"],
       read: ["~/Library/Caches/pip", "~/.cache", "~/.local/lib", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
       net: true,
