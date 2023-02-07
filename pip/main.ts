@@ -38,7 +38,7 @@ if (Deno.args.length != 0 && !knownSubcommands.includes(subcommand)) {
 
 // Ignore all commands that shouldn't be intercepted.
 if (Deno.args.length == 0 || subcommand != "install") {
-  const cmd = Deno.run({ cmd: ["pip", ...Deno.args] });
+  const cmd = Deno.run({ cmd: ["pip3", ...Deno.args] });
   const status = await cmd.status();
   Deno.exit(status.code);
 }
@@ -48,12 +48,12 @@ await checkDryRun();
 
 // Perform the package installation.
 const installStatus = PhylumApi.runSandboxed({
-  cmd: "pip",
+  cmd: "pip3",
   args: Deno.args,
   exceptions: {
     run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
-    write: ["./", "~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
-    read: ["~/Library/Caches/pip", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
+    write: ["./", "~/Library/Caches", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
+    read: ["~/Library/Caches", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
     net: true,
   },
 });
@@ -64,12 +64,12 @@ async function checkDryRun() {
   console.log(`[${green("phylum")}] Finding new dependencies…`);
 
   const status = PhylumApi.runSandboxed({
-    cmd: "pip",
+    cmd: "pip3",
     args: [...Deno.args, "--dry-run"],
     exceptions: {
       run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
-      write: ["~/Library/Caches/pip", "~/.pyenv", "~/.cache", "~/.local/lib", "/tmp"],
-      read: ["~/Library/Caches/pip", "~/.cache", "~/.local/lib", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
+      write: ["~/Library/Caches", "~/.pyenv", "~/.cache", "~/.local/lib", "/tmp"],
+      read: ["~/Library/Caches", "~/.cache", "~/.local/lib", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
       net: true,
     },
     stdout: 'piped',
