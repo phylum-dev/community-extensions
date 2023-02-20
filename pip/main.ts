@@ -73,6 +73,7 @@ async function checkDryRun() {
       net: true,
     },
     stdout: 'piped',
+    stderr: 'piped',
   });
 
   // Ensure dry-run was successful.
