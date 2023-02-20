@@ -110,6 +110,7 @@ async function checkDryRun() {
     console.error(
       `[${red("phylum")}] The operation caused a threshold failure.\n`,
     );
+
     Deno.exit(127);
   }
 }
@@ -137,10 +138,15 @@ function parseDryRun(output: string): [object] {
   // Parse dependency names and versions.
   const deps = new_deps.split(' ');
   for (var i = 0; i < deps.length; i++) {
+    const pkg = deps[i];
+    const lastDashIndex = pkg.lastIndexOf('-');
+    const pkgName = pkg.substring(0, lastDashIndex);
+    const pkgVer = pkg.substring(lastDashIndex+1);
+
     const dep = deps[i].split('-');
     packages.push({
-      name: dep[0],
-      version: dep[1],
+      name: pkgName,
+      version: pkgVer,
     });
   }
 
