@@ -52,8 +52,8 @@ const installStatus = PhylumApi.runSandboxed({
   args: Deno.args,
   exceptions: {
     run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
-    write: ["./", "~/Library/Caches", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
-    read: ["~/Library/Caches", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
+    write: ["./", "~/Library/Caches", "~/Library/Python", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
+    read: ["~/Library/Caches", "~/Library/Python", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
     net: true,
   },
 });
