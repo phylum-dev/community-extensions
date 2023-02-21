@@ -78,9 +78,10 @@ async function checkDryRun() {
 
   // Ensure dry-run was successful.
   if (!status.success) {
+    console.log(status);
     console.error(`[${red("phylum")}] Pip dry-run failed.\n`);
     await Deno.exit(status.code);
-  }
+  } 
 
   // Parse dry-run output.
   let packages = parseDryRun(status.stdout);
