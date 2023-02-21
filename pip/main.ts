@@ -60,7 +60,6 @@ const installStatus = PhylumApi.runSandboxed({
 Deno.exit(installStatus.code);
 
 // Logs any identified issues to the screen.
-// Logs any identified issues to the screen.
 async function logIssues(jobStatus) {
   for(const key in jobStatus.packages) {
     const pkg = jobStatus.packages[key];
