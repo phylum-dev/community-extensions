@@ -59,6 +59,29 @@ const installStatus = PhylumApi.runSandboxed({
 });
 Deno.exit(installStatus.code);
 
+// Logs any identified issues to the screen.
+async function logIssues(jobStatus) {
+  for(const key in jobStatus.packages) {
+    const pkg = jobStatus.packages[key];
+    const issues = pkg.issues;
+
+    for(const idx in issues) {
+      const issue = issues[idx];
+      let severity = issue.severity.toLowerCase();
+      
+      if(["high", "critical"].indexOf(severity) != -1) {
+        severity = red(severity);
+      } else if(severity == "medium") {
+        severity = yellow(severity);
+      } else {
+        severity = green(severity);
+      }
+
+      console.log(`    [${severity}] ${issue.title}`)
+    }
+  }
+}
+
 // Analyze new packages.
 async function checkDryRun() {
   console.log(`[${green("phylum")}] Finding new dependencies…`);
@@ -112,6 +135,7 @@ async function checkDryRun() {
       `[${red("phylum")}] The operation caused a threshold failure.\n`,
     );
 
+    logIssues(jobStatus);
     Deno.exit(127);
   }
 }
