@@ -78,7 +78,6 @@ async function checkDryRun() {
 
   // Ensure dry-run was successful.
   if (!status.success) {
-    console.log(status);
     console.error(`[${red("phylum")}] Pip dry-run failed.\n`);
     await Deno.exit(status.code);
   } 
@@ -145,7 +144,6 @@ function parseDryRun(output: string): [object] {
     const pkgName = pkg.substring(0, lastDashIndex);
     const pkgVer = pkg.substring(lastDashIndex+1);
 
-    const dep = deps[i].split('-');
     packages.push({
       name: pkgName,
       version: pkgVer,
