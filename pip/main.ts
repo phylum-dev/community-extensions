@@ -52,8 +52,8 @@ const installStatus = PhylumApi.runSandboxed({
   args: Deno.args,
   exceptions: {
     run: ["./", "/bin", "/usr/bin", "/usr/local/bin", "~/.pyenv"],
-    write: ["./", "~/Library/Caches", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
-    read: ["~/Library/Caches", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
+    write: ["./", "~/Library/Caches", "~/Library/Python", "~/.cache", "~/.local", "~/.pyenv", "/tmp"],
+    read: ["~/Library/Caches", "~/Library/Python", "~/.cache", "~/.local", "~/.pyenv", "/tmp", "/etc/passwd", "/etc/apache2/mime.types"],
     net: true,
   },
 });
@@ -96,13 +96,14 @@ async function checkDryRun() {
       net: true,
     },
     stdout: 'piped',
+    stderr: 'piped',
   });
 
   // Ensure dry-run was successful.
   if (!status.success) {
     console.error(`[${red("phylum")}] Pip dry-run failed.\n`);
     await Deno.exit(status.code);
-  }
+  } 
 
   // Parse dry-run output.
   let packages = parseDryRun(status.stdout);
@@ -162,10 +163,14 @@ function parseDryRun(output: string): [object] {
   // Parse dependency names and versions.
   const deps = new_deps.split(' ');
   for (var i = 0; i < deps.length; i++) {
-    const dep = deps[i].split('-');
+    const pkg = deps[i];
+    const lastDashIndex = pkg.lastIndexOf('-');
+    const pkgName = pkg.substring(0, lastDashIndex);
+    const pkgVer = pkg.substring(lastDashIndex+1);
+
     packages.push({
-      name: dep[0],
-      version: dep[1],
+      name: pkgName,
+      version: pkgVer,
     });
   }
 
