@@ -10,4 +10,4 @@ phylum extension install community-extensions/build-gradle/
 ```
 
 ## Running
-From a directory containing a `build.gradle` file, run `phylum build-gradle` to analyze the project and all subprojects.
+From a directory containing a `build.gradle` file, run `phylum build-gradle-lock` to analyze the project and all subprojects.
