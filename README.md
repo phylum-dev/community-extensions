@@ -7,7 +7,6 @@ find them useful.
 You can find the following extensions in the repository:
 
 * [`build-gradle`](./build-gradle/README.md) - Parse `build.gradle` files for submission to Phylum
-* [`pip`](./pip/README.md) - Support for `pip` sandboxing and dependency analysis
 * [`sbom`](./sbom/README.md) - Generate SBOMs from Phylum job submissions
 
 ## Contributions welcome
