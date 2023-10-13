@@ -146,7 +146,7 @@ async function fetchProjectData(project: string, group?: string): Promise<any> {
             const response = await PhylumApi.fetch("v0/", url, headers);
 
             if(!response.ok) {
-                console.error(response.text);
+                console.error(`Failed to fetch project data, received HTTP error: ${response.status}`);
             } else {
                 const data = await response.json();
                 return data;
