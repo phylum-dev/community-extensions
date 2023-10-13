@@ -6,7 +6,7 @@ Clone the repository and install the extension via the Phylum CLI.
 
 ```console
 git clone https://github.com/phylum-dev/community-extensions
-phylum extension install community-extensions/sbom/
+phylum extension install community-extensions/sarif/
 ```
 
 ## Running
