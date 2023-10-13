@@ -1,7 +1,4 @@
 name = "sarif"
 
 [permissions]
-write = false 
-read = false 
-run = false 
 net = true
