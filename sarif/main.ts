@@ -132,21 +132,26 @@ async function fetchProjectData(project: string, group?: string): Promise<any> {
         // Get a list of projects, and pull the project ID for the matching project name.
         const projects = await fetchProjectNames(group);
         const matchingProject = projects.find((obj: Project) => obj.name.toLowerCase() == project.toLowerCase());
-        const projectId = matchingProject.id;
 
-        const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${project}`;
-        const headers = {
-            "Authentication": `Bearer ${accessToken}`,
-            "accept": "application/json"
-        };
-
-        const response = await PhylumApi.fetch("v0/", url, headers);
-
-        if(!response.ok) {
-            console.error(response.text);
+        if(!matchingProject) {
+            console.error(`Failed to find a matching project for '${project}'. If this is a group project, specify the group name with --group <name>.`);
         } else {
-            const data = await response.json();
-            return data;
+            const projectId = matchingProject.id;
+
+            const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${project}`;
+            const headers = {
+                "Authentication": `Bearer ${accessToken}`,
+                "accept": "application/json"
+            };
+
+            const response = await PhylumApi.fetch("v0/", url, headers);
+
+            if(!response.ok) {
+                console.error(response.text);
+            } else {
+                const data = await response.json();
+                return data;
+            }
         }
     } catch (error) {
         console.error("There was an issue fetching the project data:", error);
@@ -159,9 +164,12 @@ let project = args["project"];
 let group = args["group"];
 
 if(!project) {
-    console.error("You must specify a project name with `--project <name>`");
+    console.error("You must specify a project name with `--project <name>` (with an optiona `--group <name>`)");
 } else {
     const data = await fetchProjectData(project, group); 
-    const sarifOutput = convertToSarif(data);
-    console.log(JSON.stringify(sarifOutput, null, 2));
+
+    if(data) {
+        const sarifOutput = convertToSarif(data);
+        console.log(JSON.stringify(sarifOutput, null, 2));
+    }
 }
