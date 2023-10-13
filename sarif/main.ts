@@ -170,5 +170,7 @@ if(!project) {
     if(data) {
         const sarifOutput = convertToSarif(data);
         console.log(JSON.stringify(sarifOutput, null, 2));
+} else { 
+    console.log("No project found. If the project is part of a group, specficy with `--group <name>`")
     }
 }
