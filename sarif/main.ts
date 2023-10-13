@@ -110,10 +110,6 @@ const convertToSarif = (input: InputJson) => {
  */
 async function fetchProjectNames(group?: string): Promise<any> {
     const url = group ? `groups/${group}/projects`: `data/projects`;
-    const headers = {
-        "accept": "application/json"
-    };
-
     const response = await PhylumApi.fetch("v0/", url, {});
 
     if (!response.ok) {
@@ -138,12 +134,7 @@ async function fetchProjectData(project: string, group?: string): Promise<any> {
             const projectId = matchingProject.id;
 
             const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${project}`;
-            const headers = {
-                "Authentication": `Bearer ${accessToken}`,
-                "accept": "application/json"
-            };
-
-            const response = await PhylumApi.fetch("v0/", url, headers);
+            const response = await PhylumApi.fetch("v0/", url, {});
 
             if(!response.ok) {
                 console.error(`Failed to fetch project data, received HTTP error: ${response.status}`);
