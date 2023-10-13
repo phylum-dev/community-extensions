@@ -111,7 +111,6 @@ const convertToSarif = (input: InputJson) => {
 async function fetchProjectNames(group?: string): Promise<any> {
     const url = group ? `groups/${group}/projects`: `data/projects`;
     const headers = {
-        "Authentication": `Bearer ${accessToken}`,
         "accept": "application/json"
     };
 
