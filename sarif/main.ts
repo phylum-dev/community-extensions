@@ -163,7 +163,7 @@ let project = args["project"];
 let group = args["group"];
 
 if(!project) {
-    console.error("You must specify a project name with `--project <name>` (with an optiona `--group <name>`)");
+    console.error("You must specify a project name with `--project <name>` (with an optional `--group <name>`)");
 } else {
     const data = await fetchProjectData(project, group); 
 
