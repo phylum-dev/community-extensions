@@ -30,64 +30,38 @@ type Project = {
     group_name: string;
 };
 
-const accessToken = await PhylumApi.getAccessToken();
+// Used to map our severity from Phylum to valid Sarif
+const validLevels = {
+    "critical": "error",
+    "high": "warning",
+    "medium": "note",
+    "low": "none",
+};
 
 /**
  * Given a Phylum JSON response, convert it into a valid SARIF JSON.
  */
 const convertToSarif = (input: InputJson) => {
-    const sarif: any = {
-        "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
-        "version": "2.1.0",
-        "runs": [
-            {
-                "tool": {
-                    "driver": {
-                        "name": "Phylum",
-                        "version": "1.0.0",
-                        "informationUri": "https://phylum.io",
-                        "rules": [] // This will be populated later
-                    }
-                },
-                "results": [] // This will be populated later
-            }
-        ]
-    };
-
-    // Used to map our severity from Phylum to valid Sarif
-    const validLevels = {
-        "critical": "error",
-        "high": "warning",
-        "medium": "note",
-        "low": "none",
-    };
-
-    const ruleIds: string[] = [];
+    let rules = [];
+    let results = [];
 
     for (const dep of input.dependencies) {
-        for (const rej of dep.issues) {
-            const ruleId = rej.tag;
+        for (const issue of dep.issues) {
+            rules.push({
+                "id": issue.tag,
+                "name": issue.title,
+                "shortDescription": {
+                    "text": issue.description
+                },
+                "defaultConfiguration": {
+                    "level": validLevels[issue.impact]
+                }
+            });
 
-            // Add rule to the tool's rules if not already added
-            if (!ruleIds.includes(ruleId)) {
-                ruleIds.push(ruleId);
-                sarif.runs[0].tool.driver.rules.push({
-                    "id": ruleId,
-                    "name": rej.title,
-                    "shortDescription": {
-                        "text": rej.description
-                    },
-                    "defaultConfiguration": {
-                        "level": validLevels[rej.impact]
-                    }
-                });
-            }
-
-            // Add result
-            sarif.runs[0].results.push({
-                "ruleId": ruleId,
+            results.push({
+                "ruleId": issue.tag,
                 "message": {
-                    "text": rej.title
+                    "text": issue.title
                 },
                 "locations": [
                     {
@@ -101,6 +75,24 @@ const convertToSarif = (input: InputJson) => {
             });
         }
     }
+
+    const sarif: any = {
+        "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "Phylum",
+                        "version": "1.0.0",
+                        "informationUri": "https://phylum.io",
+                        "rules": rules 
+                    }
+                },
+                "results": results 
+            }
+        ]
+    };
 
     return sarif;
 };
