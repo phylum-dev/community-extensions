@@ -114,7 +114,7 @@ async function fetchProjectNames(group?: string): Promise<any> {
         "accept": "application/json"
     };
 
-    const response = await PhylumApi.fetch("v0/", url, headers);
+    const response = await PhylumApi.fetch("v0/", url, {});
 
     if (!response.ok) {
         throw new Error(`Failed to fetch projects, HTTP error: ${response.status}`);
