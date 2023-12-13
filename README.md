@@ -6,7 +6,6 @@ find them useful.
 
 You can find the following extensions in the repository:
 
-* [`build-gradle`](./build-gradle/README.md) - Parse `build.gradle` files for submission to Phylum
 * [`sarif`](./sarif/README.md) - Generate SARIF from a Phylum project
 
 ## Contributions welcome
