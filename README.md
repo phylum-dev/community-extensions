@@ -6,7 +6,6 @@ find them useful.
 
 You can find the following extensions in the repository:
 
-* [`sbom`](./sbom/README.md) - Generate SBOMs from Phylum job submissions
 * [`sarif`](./sarif/README.md) - Generate SARIF from a Phylum project
 
 ## Contributions welcome
