@@ -1,6 +1,6 @@
 //import { PhylumApi } from 'phylum';
 import { parseArgs } from "https://deno.land/std@0.211.0/cli/parse_args.ts";
-import { getOrgs, getProjects } from "./snyk-api.ts";
+import { getOrgs, getProjectDependencies, getProjects } from "./snyk-api.ts";
 import { setToken, snykToken } from "./token.ts";
 
 function usage() {
@@ -34,4 +34,13 @@ const token = tokenArg;
 const orgs = await getOrgs(token);
 const projects = (await Promise.all(orgs.map((org) => getProjects(token, org))))
   .flat();
-console.log(projects);
+
+for (const project of projects) {
+  try {
+    console.dir(await getProjectDependencies(token, project));
+  } catch (err) {
+    console.warn(
+      `Failed to get dependencies for project '${project.name}': ${err}`,
+    );
+  }
+}

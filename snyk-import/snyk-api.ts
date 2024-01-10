@@ -58,6 +58,25 @@ export async function getProjects(token: string, org: Org): Promise<Project[]> {
   return projects;
 }
 
+export async function getProjectDependencies(
+  token: string,
+  project: Project,
+): Promise<string[]> {
+  return await fetch(
+    `${API}/rest/orgs/${project.org.id}/projects/${project.id}/sbom?version=2023-09-14&format=cyclonedx1.4%2Bjson`,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    },
+  ).then(checkApiResponse).then(async (res) => {
+    const resp = await res.json();
+    return resp.components.map((d: any) => {
+      return d.purl;
+    });
+  });
+}
+
 async function getSingle(
   token: string,
   path: string,
