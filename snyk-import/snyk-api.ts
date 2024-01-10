@@ -8,7 +8,7 @@ type Org = {
   slug: string;
 };
 
-type Project = {
+export type Project = {
   org: Org;
   id: string;
   name: string;
