@@ -6,7 +6,7 @@ job to a Phylum project of the same name.
 
 ## Installation
 
-Clone the repository and install the extension via the Phylum CLI.
+Clone the repository and install the extension via the Phylum CLI:
 
 ```console
 git clone https://github.com/phylum-dev/community-extensions
@@ -15,7 +15,7 @@ phylum extension install community-extensions/snyk-import/
 
 ## Running
 
-To import all of your current Snyk projects
+To import all of your current Snyk projects:
 
 ```
 phylum snyk-import --group <phylum_group>
