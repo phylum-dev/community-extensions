@@ -21,8 +21,8 @@ To import all of your current Snyk projects:
 phylum snyk-import --group <phylum_group>
 ```
 
-Or, setup a [Snyk service account][] and use the token to import all projects in
-a Snyk org:
+Or, setup a [Snyk service account] and use the token to import all projects in a
+Snyk org:
 
 ```
 phylum snyk-import --token <service_token> --group <phylum_group>
