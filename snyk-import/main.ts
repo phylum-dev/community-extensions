@@ -30,7 +30,7 @@ const args = parseArgs(Deno.args, {
   },
 });
 
-let tokenArg = args.token;
+let tokenArg = args.token ?? Deno.env.get("SNYK_TOKEN");
 if (tokenArg && args["save-token"]) {
   setToken(tokenArg);
 }

@@ -25,7 +25,7 @@ Or, setup a [Snyk service account] and use the token to import all projects in a
 Snyk org:
 
 ```
-phylum snyk-import --token <service_token> --group <phylum_group>
+SNYK_TOKEN=<service_token> phylum snyk-import --group <phylum_group>
 ```
 
 [Snyk service account]: https://docs.snyk.io/enterprise-setup/service-accounts
