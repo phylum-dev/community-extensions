@@ -9,6 +9,7 @@ import {
   Project,
 } from "./snyk-api.ts";
 import { setToken, snykToken } from "./token.ts";
+import { checkPhylumResponse } from "./lib.ts";
 
 function usage() {
   console.log(
@@ -52,6 +53,7 @@ for (const project of projects) {
   });
 }
 
+/// Import the given Snyk project to Phylum.
 async function importProject(project: Project) {
   const dependencies = await getProjectDependencies(token, project);
   if (dependencies.length === 0) {
@@ -67,6 +69,8 @@ async function importProject(project: Project) {
     console.log(`Created phylum project '${project.name}'`);
   }
 
+  // Using PhylumApi.analyze() would be preferred, but that function doesn't support PURLs yet.
+  // Ref: https://github.com/phylum-dev/cli/issues/1336
   const job_id = await PhylumApi.fetch(ApiVersion.V0, "/data/jobs/", {
     method: "POST",
     body: JSON.stringify({
@@ -74,27 +78,10 @@ async function importProject(project: Project) {
       project: projectId,
       label: "snyk-import",
     }),
-  }).then(checkApiResponse).then(async (res: any) => {
+  }).then(checkPhylumResponse).then(async (res: any) => {
     const resp = await res.json();
     return resp.job_id;
   });
 
   console.log(`Imported project '${project.name}' in job with ID ${job_id}`);
-}
-
-async function checkApiResponse(res: Response): Promise<Response> {
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    let msg: string;
-    try {
-      msg = JSON.parse(body).error.description;
-    } catch (_err) {
-      msg = `HTTP ${res.status} received. Body: ${body}`;
-    }
-    const err = new Error(msg);
-    err.name = "API Error";
-
-    throw err;
-  }
-  return res;
 }

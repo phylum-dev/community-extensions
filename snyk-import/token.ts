@@ -1,5 +1,6 @@
+import { SNYK_API_URI } from "./lib.ts";
+
 const SNYK_TOKEN = "SNYK_TOKEN";
-import { API } from "./const.ts";
 
 const STORAGE = {
   getItem: (key: string): string | null => {
@@ -49,7 +50,7 @@ Alternately, use the --token command-line argument to set the token`,
   let ok = false;
   let api;
   while (!ok && Date.now() - start < timeout) {
-    const resp = await fetch(`${API}/v1/verify/callback`, {
+    const resp = await fetch(`${SNYK_API_URI}/v1/verify/callback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
