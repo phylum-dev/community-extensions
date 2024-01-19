@@ -4,6 +4,7 @@ export const SNYK_API_URI = "https://api.snyk.io";
 /// Throw descriptive errors for REST API error responses.
 async function checkApiResponse(
   res: Response,
+  api_name: string,
   error_description: (body: string) => string,
 ): Promise<Response> {
   if (res.ok) {
@@ -18,13 +19,13 @@ async function checkApiResponse(
     msg = `HTTP ${res.status} received. Body: ${body}`;
   }
   const err = new Error(msg);
-  err.name = "API Error";
+  err.name = `${api_name} API Error`;
 
   throw err;
 }
 
 export const checkPhylumResponse = (res: Response) =>
-  checkApiResponse(res, (body) => JSON.parse(body).error.description);
+  checkApiResponse(res, "Phylum", (body) => JSON.parse(body).error.description);
 
 export const checkSnykResponse = (res: Response) =>
-  checkApiResponse(res, (body) => JSON.parse(body).errors[0].detail);
+  checkApiResponse(res, "Snyk", (body) => JSON.parse(body).errors[0].detail);
