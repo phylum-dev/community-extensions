@@ -10,6 +10,7 @@ import {
 } from "./snyk-api.ts";
 import { setToken, snykToken } from "./token.ts";
 import { checkPhylumResponse } from "./lib.ts";
+import { inParallel } from "./jobs.ts";
 
 function usage() {
   console.log(
@@ -42,16 +43,18 @@ if (!tokenArg) {
 const token = tokenArg;
 
 const orgs = await getOrgs(token);
-const projects = (await Promise.all(orgs.map((org) => getProjects(token, org))))
+const projects = (await inParallel(orgs, (org) => getProjects(token, org)))
   .flat();
 
-for (const project of projects) {
-  importProject(project).catch((err) => {
+inParallel(projects, async (project) => {
+  try {
+    await importProject(project);
+  } catch (err) {
     console.warn(
       `Failed to import project '${project.name}': ${err}`,
     );
-  });
-}
+  }
+});
 
 /// Import the given Snyk project to Phylum.
 async function importProject(project: Project) {
