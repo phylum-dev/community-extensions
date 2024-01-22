@@ -1,7 +1,6 @@
 # `sarif` Extension for Phylum
 
-This extension will take a Phylum project name (and optional group name),
-retrieve the JSON for the latest job and produce a valid SARIF output.
+This extension will take a Phylum project name (and optional group name), retrieve the JSON for the latest job and produce a valid SARIF output.
 
 ## Installation and Basic Usage
 
