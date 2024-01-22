@@ -17,14 +17,14 @@ phylum extension install community-extensions/snyk-import/
 
 To import all of your current Snyk projects:
 
-```
+```sh
 phylum snyk-import --group <phylum_group>
 ```
 
 Or, setup a [Snyk service account] and use the token to import all projects in a
 Snyk org:
 
-```
+```sh
 SNYK_TOKEN=<service_token> phylum snyk-import --group <phylum_group>
 ```
 
