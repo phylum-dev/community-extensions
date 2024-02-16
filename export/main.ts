@@ -76,14 +76,14 @@ for (let i = 0; i < projects.length; i++) {
     }
 
     await bars.render([
-       {
-         completed: completed,
-         total: projects.length,
-         text: data.name ? data.name : "",
-         complete: "*",
-         incomplete: ".",
-       },
-     ]); 
+        {
+            completed: completed,
+            total: projects.length,
+            text: data.name ? data.name : "",
+            complete: "*",
+            incomplete: ".",
+        },
+    ]);
 
     allProjects[projectId] = data;
 }
