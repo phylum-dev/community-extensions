@@ -23,7 +23,7 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
 }
 
 /**
- * Fetch a specific projects data.
+ * Fetch all known projects accessible to the current account.
  */
 async function fetchProjects(cursor?: string): Promise<any> {
     const base = `/projects?paginate.limit=100`;
