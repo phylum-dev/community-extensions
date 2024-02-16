@@ -48,7 +48,7 @@ const args = parse(Deno.args);
 
 // Collect the list of projects
 console.log("Fetching projects list");
-const projects = await fetchProjects(); 
+const projects = await fetchProjects();
 console.log(`Found ${projects.length} projects in your account\n`);
 
 const bars = new MultiProgressBar({
