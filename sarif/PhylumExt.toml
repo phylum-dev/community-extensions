@@ -1,4 +1,5 @@
 name = "sarif"
+description = "Generate SARIF from a Phylum project"
 
 [permissions]
 net = true
