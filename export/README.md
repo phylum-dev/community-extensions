@@ -19,9 +19,3 @@ To export all project data, run:
 ```sh
 phylum export 
 ```
-
-Or optionally, if your project is in a group:
-
-```sh
-phylum export --group <name>
-```
