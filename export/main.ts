@@ -71,7 +71,7 @@ for (let i = 0; i < projects.length; i++) {
     let data = await fetchProjectData(projectId, groupName);
     completed++;
 
-    if(!data) {
+    if (!data) {
         continue;
     }
 
