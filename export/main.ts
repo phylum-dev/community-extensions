@@ -25,7 +25,7 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
 /** 
  * Iterate through the API and fetch all known projects. 
  */
-async function fetchProjects(cursor?: string, hasMore?: bool = true, perPage: int = 100): Promise<any> {
+async function fetchProjects(cursor?: string, hasMore: bool = true, perPage: int = 100): Promise<any> {
     if(!hasMore) {
         return [];
     }
