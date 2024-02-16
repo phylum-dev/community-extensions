@@ -2,7 +2,6 @@
 
 This extension will iterate through your projects and export issue data for everything.
 
-
 ## Installation and Basic Usage
 
 Clone the repository and install the extension via the Phylum CLI:
