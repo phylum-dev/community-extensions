@@ -68,7 +68,7 @@ for (let i = 0; i < projects.length; i++) {
     let projectId = proj.id;
     let groupName = proj.group_name;
 
-    let data = await fetchProjectData(projectId, groupName); 
+    let data = await fetchProjectData(projectId, groupName);
     completed++;
 
     if(!data) {
