@@ -85,5 +85,5 @@ for(let i = 0; i < projects.length; i++) {
     allProjects[projectId] = data;
 }
 
-console.log("Writing project data to disk");
+console.log("\nWriting project data to disk");
 Deno.writeTextFileSync("all-projects.json", JSON.stringify(allProjects));
