@@ -22,23 +22,19 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
     }
 }
 
-/** 
- * Iterate through the API and fetch all known projects. 
+/**
+ * Fetch a specific projects data.
  */
-async function fetchProjects(cursor?: string, hasMore: bool = true, perPage: int = 100): Promise<any> {
-    if(!hasMore) {
-        return [];
-    }
-
-    const base = `/projects?paginate.limit=${perPage}`;
-    const projectsUrl = cursor ? `${base}&paginate.cursor=${cursor}` : base; 
+async function fetchProjects(cursor?: string): Promise<any> {
+    const base = `/projects?paginate.limit=100`;
+    const projectsUrl = cursor ? `${base}&paginate.cursor=${cursor}` : base;
     const response = await PhylumApi.fetch("v0/", projectsUrl, {});
 
     if (!response.ok) {
         throw new Error(`Failed to fetch projects, HTTP error: ${response.status}`);
     }
 
-    const ret = await response.json(); 
+    const ret = await response.json();
     const nextCursor = ret.values[ret.values.length - 1].id;
 
     if (ret.has_more) {
@@ -51,8 +47,9 @@ async function fetchProjects(cursor?: string, hasMore: bool = true, perPage: int
 const args = parse(Deno.args);
 
 // Collect the list of projects
+console.log("Fetching projects list");
 const projects = await fetchProjects(); 
-console.log(`Found ${projects.length} projects in your account`);
+console.log(`Found ${projects.length} projects in your account\n`);
 
 const bars = new MultiProgressBar({
     title: "Downloading project data",
@@ -67,19 +64,22 @@ let allProjects = {};
 
 // Iterate through projects and fetch project data
 for(let i = 0; i < projects.length; i++) {
-    completed++;
-
     let proj = projects[i];
     let projectId = proj.id;
     let groupName = proj.group_name;
 
     let data = await fetchProjectData(projectId, groupName); 
+    completed++;
+
+    if(!data) {
+        continue;
+    }
 
     await bars.render([
        {
          completed: completed,
          total: projects.length,
-         text: "file1",
+         text: data.name ? data.name : "",
          complete: "*",
          incomplete: ".",
        },
@@ -90,3 +90,4 @@ for(let i = 0; i < projects.length; i++) {
 
 console.log("\nWriting project data to disk");
 Deno.writeTextFileSync("all-projects.json", JSON.stringify(allProjects));
+console.log("\nWrote project data to all-projects.json");
