@@ -9,7 +9,7 @@ You can find the following extensions in the repository:
 
 * [`sarif`](./sarif/README.md) - Generate SARIF from a Phylum project
 * [`snyk-import`](./snyk-import/README.md) - Import projects from Snyk
-* [`export`](./export/README.md) - Export all project data to a single JSON file 
+* [`export`](./export/README.md) - Export all project data to a single JSON file
 
 ## Contributions welcome
 
