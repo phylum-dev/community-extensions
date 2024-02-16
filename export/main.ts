@@ -18,7 +18,7 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
             return data;
         }
     } catch (error) {
-        console.error("There was an issue fetching the project data:", error);
+        console.error("\nThere was an issue fetching the project data:", error);
     }
 }
 
