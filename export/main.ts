@@ -41,7 +41,10 @@ async function fetchProjects(cursor?: string, hasMore?: bool = true, perPage: in
     const ret = await response.json(); 
     const nextCursor = ret.values[ret.values.length - 1].id;
 
-    return ret.values.concat(fetchProjects(nextCursor, ret.has_more));
+    if (ret.has_more) {
+        return ret.values.concat(fetchProjects(nextCursor));
+    }
+    return ret.values;
 }
 
 // Parse CLI args
