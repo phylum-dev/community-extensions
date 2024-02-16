@@ -11,7 +11,7 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
         const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${projectId}`;
         const response = await PhylumApi.fetch("v0/", url, {});
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.error(`\nFailed to fetch project data, received HTTP error: ${response.status}`);
         } else {
             const data = await response.json();
