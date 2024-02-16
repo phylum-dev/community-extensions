@@ -1,0 +1,5 @@
+name = "export"
+
+[permissions]
+net = true
+write = ["all-projects.json"]
