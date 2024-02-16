@@ -63,7 +63,7 @@ let completed = 0;
 let allProjects = {};
 
 // Iterate through projects and fetch project data
-for(let i = 0; i < projects.length; i++) {
+for (let i = 0; i < projects.length; i++) {
     let proj = projects[i];
     let projectId = proj.id;
     let groupName = proj.group_name;
