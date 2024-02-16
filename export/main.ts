@@ -38,7 +38,7 @@ async function fetchProjects(cursor?: string, hasMore?: bool = true, perPage: in
         throw new Error(`Failed to fetch projects, HTTP error: ${response.status}`);
     }
 
-    const ret =  await response.json(); 
+    const ret = await response.json(); 
     const nextCursor = ret.values[ret.values.length - 1].id;
 
     return ret.values.concat(fetchProjects(nextCursor, ret.has_more));
