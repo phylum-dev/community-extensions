@@ -1,18 +1,29 @@
 import { PhylumApi } from 'phylum';
 import { parse } from "https://deno.land/std@0.156.0/flags/mod.ts";
+import { delay } from 'https://deno.land/x/delay@v0.2.0/mod.ts';
 import { MultiProgressBar } from "https://deno.land/x/progress@v1.4.4/mod.ts";
+import { pLimit } from "https://deno.land/x/p_limit@v1.0.0/mod.ts";
 
+function usage() {
+    console.log("phylum export [--group phylum_group]");
+}
 
 /**
  * Fetch the project data from the Phylum API.
  */
 async function fetchProjectData(projectId: string, group?: string): Promise<any> {
+    if(!projectId) {
+        return {};
+    }
+
     try {
         const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${projectId}`;
         const response = await PhylumApi.fetch("v0/", url, {});
 
-        if (!response.ok) {
+        if(!response.ok) {
             console.error(`\nFailed to fetch project data, received HTTP error: ${response.status}`);
+            console.log("Project ID:", projectId, "Group:", group);
+            console.log(await response.text());
         } else {
             const data = await response.json();
             return data;
@@ -25,8 +36,15 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
 /**
  * Fetch all known projects accessible to the current account.
  */
-async function fetchProjects(cursor?: string): Promise<any> {
-    const base = `/projects?paginate.limit=100`;
+async function fetchProjects(group?: string, cursor?: string): Promise<any> {
+    let base = '/projects';
+    
+    base = `${base}?paginate.limit=100`;
+    
+    if(group) {
+        base = `${base}&filter.group=${group}`
+    }
+
     const projectsUrl = cursor ? `${base}&paginate.cursor=${cursor}` : base;
     const response = await PhylumApi.fetch("v0/", projectsUrl, {});
 
@@ -38,17 +56,30 @@ async function fetchProjects(cursor?: string): Promise<any> {
     const nextCursor = ret.values[ret.values.length - 1].id;
 
     if (ret.has_more) {
-        return ret.values.concat(fetchProjects(nextCursor));
+        return ret.values.concat(await fetchProjects(group, nextCursor));
     }
+
     return ret.values;
 }
 
 // Parse CLI args
-const args = parse(Deno.args);
+const args = parse(Deno.args, {
+    alias: { group: ["g"] },
+    string: ["group"],
+    unknown: (arg) => {
+        console.error(`Unknown argument: ${arg}`);
+        usage();
+        Deno.exit(1);
+    }
+});
 
 // Collect the list of projects
-console.log("Fetching projects list");
-const projects = await fetchProjects();
+if(args.group) {
+    console.log(`Fetching projects for group ${args.group}`);
+} else {
+    console.log(`Fetching all projects`);
+}
+const projects = await fetchProjects(args.group); 
 console.log(`Found ${projects.length} projects in your account\n`);
 
 const bars = new MultiProgressBar({
@@ -63,31 +94,32 @@ let completed = 0;
 let allProjects = {};
 
 // Iterate through projects and fetch project data
-for (let i = 0; i < projects.length; i++) {
-    let proj = projects[i];
-    let projectId = proj.id;
-    let groupName = proj.group_name;
+const limit = pLimit(7);
+const input = [];
 
-    let data = await fetchProjectData(projectId, groupName);
-    completed++;
+for(const proj of projects) {
+    input.push(limit(async () => {
+        const data = await fetchProjectData(proj.id, proj.group_name)
+        completed++;
 
-    if (!data) {
-        continue;
-    }
+        bars.render([
+           {
+             completed: completed,
+             total: projects.length,
+             text: data.name ? data.name.padEnd(50, ' ') : "",
+             complete: "*",
+             incomplete: ".",
+           },
+         ]); 
 
-    await bars.render([
-        {
-            completed: completed,
-            total: projects.length,
-            text: data.name ? data.name : "",
-            complete: "*",
-            incomplete: ".",
-        },
-    ]);
-
-    allProjects[projectId] = data;
+        allProjects[proj.id] = data;
+        await delay(3);
+    }));
 }
 
-console.log("\nWriting project data to disk");
-Deno.writeTextFileSync("all-projects.json", JSON.stringify(allProjects));
-console.log("\nWrote project data to all-projects.json");
+(async () => {
+    await Promise.all(input);
+    console.log("\nWriting project data to disk");
+    Deno.writeTextFileSync("all-projects.json", JSON.stringify(allProjects));
+    console.log("\nWrote project data to all-projects.json");
+})();
