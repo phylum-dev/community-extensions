@@ -1,5 +1,5 @@
 name = "export"
-description = "Export all project data to multiple JSON file"
+description = "Export all project data to JSON files"
 
 [permissions]
 net = true
