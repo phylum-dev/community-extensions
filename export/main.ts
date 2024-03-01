@@ -117,9 +117,42 @@ for(const proj of projects) {
     }));
 }
 
+function writeBatch(batchCount, data) {
+    const filename = `project_data/projectData.${batchCount}.json`;
+    console.log(`  Writing partial project data to ${filename}`);
+    Deno.writeTextFileSync(filename, JSON.stringify(data));
+}
+
+const MAX_JSON_STRING_LENGTH = 2097152;
+
 (async () => {
     await Promise.all(input);
-    console.log("\nWriting project data to disk");
-    Deno.writeTextFileSync("all-projects.json", JSON.stringify(allProjects));
-    console.log("\nWrote project data to all-projects.json");
+    try {
+        Deno.mkdir("project_data");
+    } catch(e) {
+        console.debug("`project_data` already exists");
+    }
+
+    console.log("\n\nWriting project data to `project_data/`");
+
+    let currentBatchSize = 0;
+    let currentBatchWrite = {};
+    let currentBatchIteration = 1;
+
+    for(const projectId in allProjects) {
+        currentBatchWrite[projectId] = allProjects[projectId];
+        currentBatchSize += allProjects[projectId].length;
+
+        // If we're getting close to the max JSON string length (i.e., 75% of the maximum)
+        // write this batch to disk.
+        if(currentBatchSize > MAX_JSON_STRING_LENGTH * 0.75) {
+            writeBatch(currentBatchIteration, currentBatchWrite);
+            currentBatchIteration++;
+            currentBatchSize = 0;
+            currentBatchWrite = {};
+        }
+    }
+
+    writeBatch(currentBatchIteration, currentBatchWrite);
+    console.log(`Wrote project data to ${currentBatchIteration} files`);
 })();
