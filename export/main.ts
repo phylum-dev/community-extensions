@@ -64,11 +64,8 @@ async function fetchProjects(group?: string, cursor?: string): Promise<any> {
 
 // Parse CLI args
 const args = parse(Deno.args, {
-    alias: { group: ["g"], batch: ["b"] },
+    alias: { group: ["g"] },
     string: ["group"],
-    boolean: ["batch"],
-    negatable: ["batch"],
-    default: { "batch": true },
     unknown: (arg) => {
         console.error(`Unknown argument: ${arg}`);
         usage();
@@ -123,7 +120,7 @@ for(const proj of projects) {
 /**
  * Write the provided data to disk.
  */
-function writeBatch(name, data) {
+function writeProject(name, data) {
     const filename = `project_data/${name}.json`;
     console.log(`  ${filename}`);
     Deno.writeTextFileSync(filename, JSON.stringify(data));
@@ -141,6 +138,6 @@ function writeBatch(name, data) {
 
     for(const projectId in allProjects) {
         const projectData = allProjects[projectId];
-        writeBatch(projectId, projectData);
+        writeProject(projectId, projectData);
     }
 })();
