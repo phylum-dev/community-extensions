@@ -117,9 +117,27 @@ for(const proj of projects) {
     }));
 }
 
+/**
+ * Write the provided data to disk.
+ */
+function writeProject(name, data) {
+    const filename = `project_data/${name}.json`;
+    console.log(`  ${filename}`);
+    Deno.writeTextFileSync(filename, JSON.stringify(data));
+}
+
 (async () => {
     await Promise.all(input);
-    console.log("\nWriting project data to disk");
-    Deno.writeTextFileSync("all-projects.json", JSON.stringify(allProjects));
-    console.log("\nWrote project data to all-projects.json");
+    try {
+        await Deno.mkdir("project_data");
+    } catch(e) {
+        console.debug("`project_data` already exists");
+    }
+
+    console.log("\n\nWriting project data to `project_data/`");
+
+    for(const projectId in allProjects) {
+        const projectData = allProjects[projectId];
+        writeProject(projectId, projectData);
+    }
 })();
