@@ -79,7 +79,7 @@ async function importProject(project: Project) {
     body: JSON.stringify({
       packages: dependencies,
       project: projectId,
-      label: "snyk-import",
+      label: project.id,
     }),
   }).then(checkPhylumResponse).then(async (res: any) => {
     const resp = await res.json();
