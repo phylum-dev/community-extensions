@@ -91,10 +91,9 @@ const bars = new MultiProgressBar({
 });
 
 let completed = 0;
-let allProjects = {};
 
 // Iterate through projects and fetch project data
-const limit = pLimit(7);
+const limit = pLimit(3);
 const input = [];
 
 for(const proj of projects) {
@@ -112,7 +111,7 @@ for(const proj of projects) {
            },
          ]); 
 
-        allProjects[proj.id] = data;
+        writeProject(proj.id, data);
         await delay(3);
     }));
 }
@@ -122,22 +121,16 @@ for(const proj of projects) {
  */
 function writeProject(name, data) {
     const filename = `project_data/${name}.json`;
-    console.log(`  ${filename}`);
     Deno.writeTextFileSync(filename, JSON.stringify(data));
 }
 
 (async () => {
-    await Promise.all(input);
     try {
         await Deno.mkdir("project_data");
     } catch(e) {
         console.debug("`project_data` already exists");
     }
 
-    console.log("\n\nWriting project data to `project_data/`");
-
-    for(const projectId in allProjects) {
-        const projectData = allProjects[projectId];
-        writeProject(projectId, projectData);
-    }
+    await Promise.all(input);
+    console.log("\n\nComplete");
 })();
