@@ -125,12 +125,12 @@ function writeProject(name, data) {
 }
 
 (async () => {
-    await Promise.all(input);
     try {
         await Deno.mkdir("project_data");
     } catch(e) {
         console.debug("`project_data` already exists");
     }
 
+    await Promise.all(input);
     console.log("\n\nComplete");
 })();
