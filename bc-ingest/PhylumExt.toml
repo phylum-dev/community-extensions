@@ -1,0 +1,4 @@
+name = "bc-ingest"
+
+[permissions]
+read = true
