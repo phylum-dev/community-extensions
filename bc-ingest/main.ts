@@ -109,5 +109,5 @@ const args = parseArgs(Deno.args, {
 let data = await getJson(args.filename);
 let identifiedPackages = parseGrootDeep(data);
 
-console.log(`\nFound ${identifiedPackages.length} packages in ${args.filename}`);
+console.log(`\nFound ${identifiedPackages.size} packages in ${args.filename}`);
 console.log(identifiedPackages);
