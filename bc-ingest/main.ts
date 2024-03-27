@@ -38,6 +38,12 @@ function languageToEcosystem(language: string): Ecosystem {
  * on the slash, and grabbing the last item from the path string.
  */
 function toNpmPackage(path: string): string {
+    // npm has namespaces, which means the full package name is from the last ampersand to the end of the 
+    // path string.
+    if(path.includes('@')) {
+        return path.substr(path.lastIndexOf('@'), path.length);
+    }
+
     return path.split("/").pop()!;
 }
 
