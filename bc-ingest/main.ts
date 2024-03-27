@@ -30,7 +30,7 @@ function languageToEcosystem(language: string): Ecosystem {
         return Ecosystem.Go;
     }
 
-    console.warn(`No supported ecosystems for '${language}'`);
+    console.warn(`Phylum does not currently support analysis of '${language}' packages`);
 }
 
 /**
