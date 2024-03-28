@@ -1,4 +1,4 @@
-import { PhylumApi, Package } from 'phylum';
+import { PhylumApi, PackageWithOrigin } from 'phylum';
 import { GrootDeepJson, Ecosystem } from './types.ts';
 import { parseArgs } from "https://deno.land/std@0.211.0/cli/parse_args.ts";
 import { readFile } from "deno/fs/mod.ts";
@@ -59,10 +59,10 @@ async function getJson(filePath: string) {
  * Attempts to parse the provided JSON SBOM as a "GrootDeep" format. Returns the identified packages as a set, 
  * suitable for submission into Phylum.
  */
-function parseGrootDeep(json: string): Set<Package> {
+function parseGrootDeep(json: string, origin: string): Array<PackageWithOrigin> {
     const parsed = json as GrootDeepJson;
 
-    const identifiedPackages = new Set<Package>();
+    const identifiedPackages = new Set<PackageckageWithOrigin>();
 
     for(const language in parsed) {
         const ecosystem = languageToEcosystem(language);
@@ -76,12 +76,17 @@ function parseGrootDeep(json: string): Set<Package> {
                     pkg.name = toNpmPackage(pkg.name);
                 }
 
-                identifiedPackages.add({ "ecosystem": ecosystem, "name": pkg.name, "version": pkg.version });
+                identifiedPackages.add({
+                    "type": ecosystem,
+                    "name": pkg.name,
+                    "version": pkg.version,
+                    "origin": origin
+                });
             });
         }
     }
 
-    return identifiedPackages;
+    return Array.from(identifiedPackages.values());
 }
 
 /**
@@ -92,13 +97,14 @@ function parseBabyGroot(json: string) {
 
 function usage() {
   console.log(
-    "phylum bc-ingest <sbom-filename>",
+    "phylum bc-ingest [--file SBOM_PATH] [--group GROUP_NAME] [--project PROJECT_NAME] [--label PROJECT_LABEL]",
   );
 }
 
 const args = parseArgs(Deno.args, {
-  alias: { filename: ["f"] },
-  string: ["filename"],
+  alias: { filename: ["f"], group: ["g"], project: ["p"], label: ["l"] },
+  string: ["filename", "group", "project", "label" ],
+  default: { "group": null },
   unknown: (arg) => {
     console.error(`Unknown argument: ${arg}`);
     usage();
@@ -106,8 +112,46 @@ const args = parseArgs(Deno.args, {
   },
 });
 
-let data = await getJson(args.filename);
-let identifiedPackages = parseGrootDeep(data);
+let error = false;
 
-console.log(`\nFound ${identifiedPackages.size} packages in ${args.filename}`);
-console.log(identifiedPackages);
+if(!args.filename) {
+   console.error("\nERROR: No SBOM file specified, try `--filename SBOM_PATH`\n");
+   error = true;
+}
+
+if(!args.project) {
+    console.error("\nERROR: No project specified, try `--project PROJECT_NAME`\n");
+    error = true;
+}
+
+if(error) {
+    usage();
+    Deno.exit();
+}
+
+let data = await getJson(args.filename);
+let identifiedPackages = parseGrootDeep(data, args.filename);
+
+if(identifiedPackages.length === 0) {
+    console.log("No packages found in the SBOM");
+} else {
+    console.log(`\nFound ${identifiedPackages.length} packages in '${args.filename}'`);
+    console.log(`Submitting packages to Phylum under the '${args.project}' project`);
+
+    // Attempt to create the provided project. If the project already exists, the project ID will be
+    // returned.
+    const createRes = await PhylumApi.createProject(args.project, args.group);
+    const projectId = createRes.id as string;
+    if (createRes.status == "Created") {
+        console.log(`Created phylum project '${args.project}'`);
+    }
+
+    const job_id = await PhylumApi.analyze(
+        identifiedPackages,
+        args.project,
+        args.group,
+        args.label,
+    );
+
+    console.log(`Submitted packages to Phylum for analysis under job ID = '${job_id}'`);
+}
