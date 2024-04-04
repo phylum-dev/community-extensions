@@ -30,4 +30,6 @@ export enum Ecosystem {
     RubyGems = "rubygems",
     Java = "maven",
     Go = "golang",
+    Maven = "maven",
+    Unsupported = "unsupported",
 }

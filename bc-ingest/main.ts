@@ -31,6 +31,7 @@ function languageToEcosystem(language: string): Ecosystem {
     }
 
     console.warn(`Phylum does not currently support analysis of '${language}' packages`);
+    return Ecosystem.Unsupported;
 }
 
 /**
@@ -38,13 +39,37 @@ function languageToEcosystem(language: string): Ecosystem {
  * on the slash, and grabbing the last item from the path string.
  */
 function toNpmPackage(path: string): string {
-    // npm has namespaces, which means the full package name is from the last ampersand to the end of the 
-    // path string.
-    if(path.includes('@')) {
-        return path.substr(path.lastIndexOf('@'), path.length);
+    if(path.includes('node_modules')) {
+        path = path.substr(path.lastIndexOf('node_modules'), path.length);
     }
 
-    return path.split("/").pop()!;
+    return path.replace('node_modules/', '');
+}
+
+/**
+ *
+ */
+function is_semver(version: string): boolean {
+    const invalidChars = ['^', '<', '=', '>', '~', '*'];
+    
+    for(let c of invalidChars) {
+        if(version.includes(c)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/** 
+ *
+ */
+function is_invalid_version(version:string): boolean {
+    if(version === "" || typeof version !== "string" || version === null || is_semver(version)) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -54,18 +79,20 @@ async function getJson(filePath: string) {
     return JSON.parse(await Deno.readTextFile(filePath));
 }
 
-
 /**
  * Attempts to parse the provided JSON SBOM as a "GrootDeep" format. Returns the identified packages as a set, 
  * suitable for submission into Phylum.
  */
 function parseGrootDeep(json: string, origin: string): Array<PackageWithOrigin> {
     const parsed = json as GrootDeepJson;
-
     const identifiedPackages = new Set<PackageckageWithOrigin>();
 
     for(const language in parsed) {
         const ecosystem = languageToEcosystem(language);
+
+        if(ecosystem === Ecosystem.Unsupported) {
+            continue;
+        }
 
         for(const packageName in parsed[language]) {
             const pkgs  = parsed[language][packageName];
@@ -76,12 +103,25 @@ function parseGrootDeep(json: string, origin: string): Array<PackageWithOrigin> 
                     pkg.name = toNpmPackage(pkg.name);
                 }
 
-                identifiedPackages.add({
-                    "type": ecosystem,
-                    "name": pkg.name,
-                    "version": pkg.version,
-                    "origin": origin
-                });
+                // Not all of the packages have string versions, some seem to have objects. If we
+                // encounter a version object, grab the underlying `version` key.
+                if(pkg.version && typeof pkg.version === "object") {
+                    pkg.version = pkg.version.version;
+                }
+
+                // Some of the packages in the SBOM don't have a valid name and
+                // version (e.g., empty package name). We shouldn't try and process
+                // these.
+                if(pkg.name === "" || pkg.name === null || is_invalid_version(pkg.version)) {
+                   console.warn(`Invalid package found: name='${pkg.name}', version='${pkg.version}'`);
+                } else {
+                    identifiedPackages.add({
+                        "type": ecosystem,
+                        "name": pkg.name.toLowerCase(),
+                        "version": pkg.version,
+                        "origin": origin
+                    });
+                }
             });
         }
     }
