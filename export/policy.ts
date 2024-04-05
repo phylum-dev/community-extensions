@@ -7,7 +7,7 @@ async function fetchPolicyRequest(url: string): Promise<string> {
     const response = await PhylumApi.fetch("v0/", url, {});
     
     if(!response.ok) {
-        console.error(`\nFailed to get the policy for project '${projectId}'`);
+        console.error(`\nFailed to get the policy for project`);
     } else {
         const data = await response.json();
         return data.preferences.policy;
@@ -40,17 +40,17 @@ async function fetchProjectPolicy(projectId: string): Promise<string> {
 /**
  * General function for fetching policy for a given project. Will first try to fetch a group
  * policy, then will fall back to the project policy. If no policy is specified, the Phylum
- * defaul policy is used.
+ * default policy is used.
  */
 export async function fetchPolicy(projectId: string, group?: string): Promise<string> {
     let policy = "";
 
     if(group) {
-        policy = fetchGroupPolicy(group);
+        policy = await fetchGroupPolicy(group);
     }
 
     if(!policy) {
-        policy = fetchProjectPolicy(projectId);
+        policy = await fetchProjectPolicy(projectId);
     } 
 
     return policy ? policy : await fetchDefaultPolicy();
@@ -60,7 +60,8 @@ export async function fetchPolicy(projectId: string, group?: string): Promise<st
  * Given a job ID and a policy, evaluate the job against the policy.
  */
 export async function evaluatePolicy(jobId: string, policy: string): Promise<any> {
-    const data = `{ "ignoredPackages":[], "policy": ${JSON.stringify(policy)} }`;
+    const data = JSON.stringify({"ignoredPackages":[], "policy": policy});
+
     let resp = await PhylumApi.fetch(
         "v0/",
         `data/jobs/${jobId}/policy/evaluate/raw`,
@@ -68,5 +69,4 @@ export async function evaluatePolicy(jobId: string, policy: string): Promise<any
     );
 
     return await resp.json();
-
 }

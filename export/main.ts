@@ -32,10 +32,10 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
             const latestJobId = data.latestJobId;
 
             if(latestJobId) {
-                return evaluatePolicy(latestJobId, policy);
+                return await evaluatePolicy(latestJobId, policy);
             }
 
-            return data;
+            return null;
         }
     } catch (error) {
         console.error("\nThere was an issue fetching the project data:", error);
@@ -108,19 +108,27 @@ const input = [];
 for(const proj of projects) {
     input.push(limit(async () => {
         const data = await fetchProjectData(proj.id, proj.group_name)
+        let msg = "";
+
+        if(data) {
+            msg = data.name ? data.name.padEnd(50, ' ') : "";
+            writeProject(proj.id, data);
+        } else {
+            msg = `Project '${proj.id}' has no job runs`;
+        }
+
         completed++;
 
         bars.render([
            {
              completed: completed,
              total: projects.length,
-             text: data.name ? data.name.padEnd(50, ' ') : "",
+             text: msg,
              complete: "*",
              incomplete: ".",
            },
          ]); 
 
-        writeProject(proj.id, data);
         await delay(3);
     }));
 }
