@@ -51,7 +51,7 @@ export async function fetchPolicy(projectId: string, group?: string): Promise<st
 
     if(!policy) {
         policy = await fetchProjectPolicy(projectId);
-    } 
+    }
 
     return policy ? policy : await fetchDefaultPolicy();
 }
