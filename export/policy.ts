@@ -6,7 +6,7 @@ import { PhylumApi } from 'phylum';
 async function fetchPolicyRequest(url: string): Promise<string> {
     const response = await PhylumApi.fetch("v0/", url, {});
     if(!response.ok) {
-        console.error(`\nFailed to get the policy for project`);
+        console.error(`\nFailed to get the policy`);
     } else {
         const data = await response.json();
         return data.preferences.policy;
