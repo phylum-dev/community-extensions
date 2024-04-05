@@ -111,7 +111,7 @@ for(const proj of projects) {
         let msg = "";
 
         if(data) {
-            msg = data.name ? data.name.padEnd(50, ' ') : "";
+            msg = data.name ? data.name.padEnd(50, ' ') : "".padEnd(50, ' ');
             writeProject(proj.id, data);
         } else {
             msg = `Project '${proj.id}' has no job runs`;
