@@ -47,7 +47,8 @@ function toNpmPackage(path: string): string {
 }
 
 /**
- *
+ * Attempt to determine if this is a semantic version. We do this by simply determining if known characters that
+ * we expect in a semver are present.
  */
 function is_semver(version: string): boolean {
     const invalidChars = ['^', '<', '=', '>', '~', '*'];
@@ -62,7 +63,7 @@ function is_semver(version: string): boolean {
 }
 
 /** 
- *
+ * We say a version is invalid if it's an empty string, not a string at all, or is a possible semver.
  */
 function is_invalid_version(version:string): boolean {
     if(version === "" || typeof version !== "string" || version === null || is_semver(version)) {
