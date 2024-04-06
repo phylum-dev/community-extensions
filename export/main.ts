@@ -18,8 +18,6 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
     }
 
     try {
-        const policy = await fetchPolicy(projectId, group);
-
         const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${projectId}`;
         const response = await PhylumApi.fetch("v0/", url, {});
 
