@@ -3,7 +3,7 @@ import { parse } from "https://deno.land/std@0.156.0/flags/mod.ts";
 import { delay } from 'https://deno.land/x/delay@v0.2.0/mod.ts';
 import { MultiProgressBar } from "https://deno.land/x/progress@v1.4.4/mod.ts";
 import { pLimit } from "https://deno.land/x/p_limit@v1.0.0/mod.ts";
-import { fetchPolicy, evaluatePolicy } from './policy.ts';
+import { evaluatePolicy } from './policy.ts';
 
 function usage() {
     console.log("phylum export [--group phylum_group]");
@@ -18,8 +18,6 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
     }
 
     try {
-        const policy = await fetchPolicy(projectId, group);
-
         const url = group ? `groups/${group}/projects/${projectId}` : `data/projects/${projectId}`;
         const response = await PhylumApi.fetch("v0/", url, {});
 
@@ -32,7 +30,7 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
             const latestJobId = data.latestJobId;
 
             if(latestJobId) {
-                return await evaluatePolicy(latestJobId, policy);
+                return await evaluatePolicy(latestJobId);
             }
 
             return null;
