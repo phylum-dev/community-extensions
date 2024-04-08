@@ -3,6 +3,7 @@ import { parse } from "https://deno.land/std@0.156.0/flags/mod.ts";
 import { delay } from 'https://deno.land/x/delay@v0.2.0/mod.ts';
 import { MultiProgressBar } from "https://deno.land/x/progress@v1.4.4/mod.ts";
 import { pLimit } from "https://deno.land/x/p_limit@v1.0.0/mod.ts";
+import { evaluatePolicy } from './policy.ts';
 
 function usage() {
     console.log("phylum export [--group phylum_group]");
@@ -26,7 +27,13 @@ async function fetchProjectData(projectId: string, group?: string): Promise<any>
             console.log(await response.text());
         } else {
             const data = await response.json();
-            return data;
+            const latestJobId = data.latestJobId;
+
+            if(latestJobId) {
+                return await evaluatePolicy(latestJobId);
+            }
+
+            return null;
         }
     } catch (error) {
         console.error("\nThere was an issue fetching the project data:", error);
@@ -99,19 +106,27 @@ const input = [];
 for(const proj of projects) {
     input.push(limit(async () => {
         const data = await fetchProjectData(proj.id, proj.group_name)
+        let msg = "";
+
+        if(data) {
+            msg = data.name ? data.name : "";
+            writeProject(proj.id, data);
+        } else {
+            msg = `Project '${proj.id}' has no job runs`;
+        }
+
         completed++;
 
         bars.render([
            {
              completed: completed,
              total: projects.length,
-             text: data.name ? data.name.padEnd(50, ' ') : "",
+             text: msg.padEnd(50, ' '),
              complete: "*",
              incomplete: ".",
            },
          ]); 
 
-        writeProject(proj.id, data);
         await delay(3);
     }));
 }
