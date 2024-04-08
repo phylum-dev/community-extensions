@@ -3,7 +3,7 @@ import { PhylumApi } from 'phylum';
 /**
  * Given a job ID and a policy, evaluate the job against the policy.
  */
-export async function evaluatePolicy(jobId: string, policy: string): Promise<any> {
+export async function evaluatePolicy(jobId: string): Promise<any> {
     const data = JSON.stringify({"ignoredPackages":[], "policy": {}});
 
     let resp = await PhylumApi.fetch(
