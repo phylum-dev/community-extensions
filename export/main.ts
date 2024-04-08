@@ -109,7 +109,7 @@ for(const proj of projects) {
         let msg = "";
 
         if(data) {
-            msg = data.name ? data.name.padEnd(50, ' ') : "".padEnd(50, ' ');
+            msg = data.name ? data.name : "";
             writeProject(proj.id, data);
         } else {
             msg = `Project '${proj.id}' has no job runs`;
@@ -121,7 +121,7 @@ for(const proj of projects) {
            {
              completed: completed,
              total: projects.length,
-             text: msg,
+             text: msg.padEnd(50, ' '),
              complete: "*",
              incomplete: ".",
            },
