@@ -132,10 +132,24 @@ for(const proj of projects) {
 }
 
 /**
+ * Parse the label out of the job ID.
+ */
+function parseLabel(data) {
+    let job_parts = data["job_link"].split('label=');
+
+    if(job_parts.length > 1) {
+        return job_parts[1];
+    }
+
+    return "";
+}
+
+/**
  * Write the provided data to disk.
  */
 function writeProject(name, data) {
     const filename = `project_data/${name}.json`;
+    data['label'] = parseLabel(data);
     Deno.writeTextFileSync(filename, JSON.stringify(data));
 }
 
