@@ -135,10 +135,12 @@ for(const proj of projects) {
  * Parse the label out of the job ID.
  */
 function parseLabel(data) {
-    let job_parts = data["job_link"].split('label=');
+    if(data.job_link) {
+        let job_parts = data["job_link"].split('label=');
 
-    if(job_parts.length > 1) {
-        return job_parts[1];
+        if(job_parts.length > 1) {
+            return job_parts[1];
+        }
     }
 
     return "";
