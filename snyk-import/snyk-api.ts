@@ -74,6 +74,8 @@ export async function getProjectDependencies(
     },
   ).then(checkSnykResponse).then(async (res) => {
     const resp = await res.json();
+
+    console.log("Project Dependencies: ", resp);
     return resp.components.map((d: any) => {
       return d.purl;
     });

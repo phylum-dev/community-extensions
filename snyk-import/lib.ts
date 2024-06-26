@@ -27,5 +27,7 @@ async function checkApiResponse(
 export const checkPhylumResponse = (res: Response) =>
   checkApiResponse(res, "Phylum", (body) => JSON.parse(body).error.description);
 
-export const checkSnykResponse = (res: Response) =>
-  checkApiResponse(res, "Snyk", (body) => JSON.parse(body).errors[0].detail);
+export const checkSnykResponse = (res: Response) => {
+    console.log("Full HTTP response:", res);
+  return checkApiResponse(res, "Snyk", (body) => JSON.parse(body).errors[0].detail);
+}
