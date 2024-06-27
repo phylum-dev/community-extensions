@@ -76,9 +76,16 @@ export async function getProjectDependencies(
     const resp = await res.json();
 
     console.log("Project Dependencies: ", resp);
-    return resp.components.map((d: any) => {
-      return d.purl;
-    });
+
+    if("components" in resp) {
+        return resp.components.map((d: any) => {
+          return d.purl;
+        });
+    } else {
+        // This can occur when Snyk sends us an SBOM for a Dockerfile.
+        console.log("No `components` found in response from Snyk");
+        return [];
+    }
   });
 }
 
