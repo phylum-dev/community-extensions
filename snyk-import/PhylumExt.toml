@@ -1,6 +1,0 @@
-name = "snyk-import"
-description = "Import projects from Snyk"
-
-[permissions]
-net = ["api.snyk.io"]
-env = ["SNYK_TOKEN"]
