@@ -7,4 +7,3 @@ Before submitting a PR:
 3. Ensure that you have created sufficient tests
 4. Ensure that you have updated all affected documentation
 -->
-
